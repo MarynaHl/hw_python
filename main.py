@@ -1,15 +1,26 @@
-from temperature import convert_temperature
+import csv
+from temperature import celsius_to_fahrenheit, fahrenheit_to_celsius
 
-temperatures = [
-    "10°C",
-    "70°F",
-    "15°C",
-    "62°F",
-    "15°C",
-    "17°C",
-    "15°C",
-    "61°F"
-]
+def convert_temperature(input_file, output_file, target_unit):
+    with open(input_file, 'r') as csvfile:
+        reader = csv.DictReader(csvfile)
+        rows = list(reader)
 
-for temp in temperatures:
-    print(f"{temp} is {convert_temperature(temp)}")
+    with open(output_file, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=['Date', 'Reading'])
+        writer.writeheader()
+        
+        for row in rows:
+            temperature = float(row['Reading'].strip('°C°F'))
+            if 'C' in row['Reading']:
+                converted_temperature = celsius_to_fahrenheit(temperature) if target_unit == 'F' else temperature
+            elif 'F' in row['Reading']:
+                converted_temperature = fahrenheit_to_celsius(temperature) if target_unit == 'C' else temperature
+            else:
+                raise ValueError("Invalid temperature unit")
+            
+            writer.writerow({'Date': row['Date'], 'Reading': f"{converted_temperature}°{target_unit}"})
+
+if __name__ == "__main__":
+    convert_temperature('input.csv', 'output.csv', 'C')
+
