@@ -1,5 +1,6 @@
 import csv
-from temperature import celsius_to_fahrenheit, fahrenheit_to_celsius, meters_to_feet, feet_to_meters
+from temperature import celsius_to_fahrenheit, fahrenheit_to_celsius
+from distance import meters_to_feet, feet_to_meters
 
 def convert_temperature_and_distance(input_file, output_file, target_unit):
     with open(input_file, 'r') as csvfile:
